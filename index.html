@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binário de Lucro - Plataforma de Negociação de Cripto com IA</title>
+    <meta name="description" content="Maximize seus lucros em cripto com nossa plataforma de negociação com IA. Análise avançada, execução automática e resultados comprovados.">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300D4FF' stroke-width='2'%3E%3Cpath d='m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z'/%3E%3C/svg%3E">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --crypto-dark: hsl(240, 10%, 3.9%);
+            --crypto-darker: hsl(240, 10%, 8%);
+            --crypto-blue: hsl(193, 100%, 50%);
+            --crypto-green: hsl(142, 100%, 50%);
+            --crypto-gold: hsl(45, 100%, 50%);
+            --crypto-gray: hsl(240, 5%, 64.9%);
+            --crypto-light-gray: hsl(240, 5%, 84.9%);
+            --crypto-red: hsl(0, 84%, 60%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--crypto-dark);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .nav.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--crypto-darker);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--crypto-light-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--crypto-blue);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+            background: linear-gradient(135deg, var(--crypto-dark) 0%, var(--crypto-darker) 100%);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 56px;
+            font-weight: bold;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 20px;
+            color: var(--crypto-gray);
+            margin-bottom: 32px;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding-top: 48px;
+            border-top: 1px solid var(--crypto-darker);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--crypto-gray);
+        }
+
+        /* Trading Interface */
+        .trading-section {
+            padding: 80px 0;
+            background: var(--crypto-darker);
+        }
+
+        .trading-interface {
+            background: var(--crypto-dark);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--crypto-darker);
+            margin-top: 32px;
+        }
+
+        .trading-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .trading-tabs {
+            display: flex;
+            gap: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: var(--crypto-darker);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--crypto-blue);
+        }
+
+        .trading-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .trading-panel {
+            background: var(--crypto-darker);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .trading-panel h3 {
+            margin-bottom: 16px;
+            color: var(--crypto-blue);
+        }
+
+        .crypto-pair {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--crypto-dark);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .crypto-pair:hover {
+            background: var(--crypto-darker);
+        }
+
+        .pair-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .crypto-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .pair-details h4 {
+            margin-bottom: 4px;
+        }
+
+        .pair-details small {
+            color: var(--crypto-gray);
+        }
+
+        .price-info {
+            text-align: right;
+        }
+
+        .price {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .change {
+            font-size: 14px;
+        }
+
+        .positive {
+            color: var(--crypto-green);
+        }
+
+        .negative {
+            color: var(--crypto-red);
+        }
+
+        .ai-signals {
+            background: var(--crypto-darker);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .signal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--crypto-dark);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--crypto-green);
+        }
+
+        .signal.sell {
+            border-left-color: var(--crypto-red);
+        }
+
+        .signal-info h4 {
+            margin-bottom: 4px;
+        }
+
+        .signal-meta {
+            color: var(--crypto-gray);
+            font-size: 14px;
+        }
+
+        .signal-action {
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+
+        .signal-buy {
+            background: var(--crypto-green);
+            color: white;
+        }
+
+        .signal-sell {
+            background: var(--crypto-red);
+            color: white;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--crypto-dark);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .section-header p {
+            font-size: 20px;
+            color: var(--crypto-gray);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--crypto-darker);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--crypto-darker);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--crypto-blue);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card p {
+            color: var(--crypto-gray);
+            margin-bottom: 24px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--crypto-dark);
+            border-top: 1px solid var(--crypto-darker);
+            padding: 48px 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 48px;
+        }
+
+        .footer-brand {
+            margin-bottom: 24px;
+        }
+
+        .footer-brand p {
+            color: var(--crypto-gray);
+            margin: 16px 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--crypto-darker);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--crypto-light-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--crypto-blue);
+        }
+
+        .footer-section h3 {
+            margin-bottom: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: var(--crypto-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--crypto-blue);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--crypto-darker);
+            margin-top: 48px;
+            padding-top: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 36px;
+            }
+
+
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+            background: var(--crypto-darker);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 24px;
+            background: var(--crypto-dark);
+            border-radius: 12px;
+            border: 1px solid var(--crypto-darker);
+            transition: all 0.3s ease;
+        }
+
+        .contact-info:hover {
+            transform: translateY(-4px);
+            border-color: var(--crypto-blue);
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Live indicators */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: var(--crypto-green);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">BP</div>
+                    <span class="logo-text">Binário de Lucro</span>
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#features">Recursos</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+                
+                <a href="#contact" class="btn btn-primary">Começar</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>
+                        <span class="gradient-text">Negociação de Cripto com IA</span><br>
+                        <span>Simplificada</span>
+                    </h1>
+                    <p>
+                        Maximize seus lucros em criptomoedas com nossa plataforma avançada de negociação alimentada por IA. 
+                        Obtenha resultados comprovados e comece a ver lucros em menos de 24 horas com nosso sistema automatizado.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">Comece - Lucro em 24h</a>
+                        <a href="#features" class="btn" style="border: 2px solid var(--crypto-blue); color: var(--crypto-blue);">Saiba Mais</a>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value gradient-text" id="successRate">0%</div>
+                            <div class="stat-label">Taxa de Sucesso</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" style="color: var(--crypto-blue)" id="activeUsers">0+</div>
+                            <div class="stat-label">Usuários Ativos</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" style="color: var(--crypto-gold)" id="volume">0M+</div>
+                            <div class="stat-label">Volume Negociado</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-image">
+                    <div style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                             alt="Painel de negociação de criptomoedas" 
+                             style="width: 100%; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                        
+                        <div style="position: absolute; top: 24px; right: 24px; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(16px); border-radius: 12px; padding: 16px;">
+                            <div class="live-indicator">
+                                <div class="live-dot"></div>
+                                <span>AO VIVO</span>
+                            </div>
+                            <div style="margin-top: 8px; color: var(--crypto-green); font-weight: bold;">+24.5% Hoje</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trading-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="gradient-text">Lucro em Menos de 24 Horas</span></h2>
+                <p>Junte-se a milhares de traders de sucesso que começaram a ver lucros em seu primeiro dia usando nosso sistema de IA.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; margin-top: 48px;">
+                <div style="text-align: center; padding: 40px; background: var(--crypto-dark); border-radius: 16px; border: 1px solid var(--crypto-green);">
+                    <div style="font-size: 64px; margin-bottom: 16px;">⚡</div>
+                    <h3 style="color: var(--crypto-green); margin-bottom: 16px;">Resultados Rápidos</h3>
+                    <p style="color: var(--crypto-gray);">Nossos algoritmos de IA começam a trabalhar imediatamente após a configuração, identificando oportunidades lucrativas em horas.</p>
+                </div>
+                
+                <div style="text-align: center; padding: 40px; background: var(--crypto-dark); border-radius: 16px; border: 1px solid var(--crypto-blue);">
+                    <div style="font-size: 64px; margin-bottom: 16px;">🎯</div>
+                    <h3 style="color: var(--crypto-blue); margin-bottom: 16px;">Estratégia Comprovada</h3>
+                    <p style="color: var(--crypto-gray);">Modelos avançados de aprendizado de máquina treinados em anos de dados de mercado para desempenho consistente.</p>
+                </div>
+                
+                <div style="text-align: center; padding: 40px; background: var(--crypto-dark); border-radius: 16px; border: 1px solid var(--crypto-gold);">
+                    <div style="font-size: 64px; margin-bottom: 16px;">💰</div>
+                    <h3 style="color: var(--crypto-gold); margin-bottom: 16px;">Lucros Garantidos</h3>
+                    <p style="color: var(--crypto-gray);">Comece a ver retornos em 24 horas ou receba suporte personalizado para otimizar sua estratégia.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px; padding: 40px; background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green)); border-radius: 16px;">
+                <h3 style="font-size: 32px; margin-bottom: 16px; color: white;">Pronto para Começar a Ganhar?</h3>
+                <p style="font-size: 18px; margin-bottom: 24px; color: white; opacity: 0.9;">Junte-se à nossa comunidade de traders de sucesso e comece sua jornada para a liberdade financeira.</p>
+                <a href="#contact" class="btn" style="background: white; color: var(--crypto-dark); font-weight: bold; padding: 16px 32px; font-size: 18px;">Contate-nos Agora</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="gradient-text">Recursos Avançados</span></h2>
+                <p>Nossa plataforma combina IA de ponta com análise técnica avançada para proporcionar uma experiência de negociação superior.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));">🧠</div>
+                    <h3>IA Avançada</h3>
+                    <p>Algoritmos de aprendizado de máquina que analisam milhares de indicadores em tempo real para identificar as melhores oportunidades de negociação.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, var(--crypto-green), var(--crypto-gold));">🛡️</div>
+                    <h3>Gerenciamento de Risco</h3>
+                    <p>Proteção de capital automática com stop-loss inteligente e diversificação de portfólio baseada em análise de volatilidade.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, var(--crypto-gold), var(--crypto-blue));">📈</div>
+                    <h3>Análise Técnica</h3>
+                    <p>Análise completa de padrões gráficos, indicadores técnicos e sentimento de mercado para decisões precisas de entrada e saída.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, var(--crypto-blue), var(--crypto-green));">⚡</div>
+                    <h3>Execução Rápida</h3>
+                    <p>Latência ultrabaixa com execução de ordens em milissegundos, garantindo que você capture todas as oportunidades de mercado.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, var(--crypto-green), var(--crypto-gold));">📱</div>
+                    <h3>Aplicativo Móvel</h3>
+                    <p>Monitore e controle seus investimentos de qualquer lugar com nosso aplicativo móvel completo e notificações em tempo real.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, var(--crypto-gold), var(--crypto-blue));">🎧</div>
+                    <h3>Suporte 24/7</h3>
+                    <p>Equipe especializada disponível 24 horas por dia para responder às suas perguntas e ajudar a otimizar seus resultados de negociação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="gradient-text">Comece Hoje Mesmo</span></h2>
+                <p>Pronto para começar a obter lucros em menos de 24 horas? Entre em contato agora e deixe nosso sistema de negociação de IA trabalhar para você.</p>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h3 style="font-size: 32px; margin-bottom: 32px; text-align: center;">Informações de Contato</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 32px;">
+                    <div class="contact-info">
+                        <div class="contact-icon" style="background: var(--crypto-blue)/20; color: var(--crypto-blue);">📧</div>
+                        <div>
+                            <h4>Email</h4>
+                            <p style="color: var(--crypto-gray); margin: 0;">binariodelucro@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-icon" style="background: var(--crypto-green)/20; color: var(--crypto-green);">📞</div>
+                        <div>
+                            <h4>Telefone</h4>
+                            <p style="color: var(--crypto-gray); margin: 0;">+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-icon" style="background: var(--crypto-gold)/20; color: var(--crypto-gold);">🕒</div>
+                        <div>
+                            <h4>Horário de Suporte</h4>
+                            <p style="color: var(--crypto-gray); margin: 0;">24/7 - Sempre Disponível</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 48px; padding: 32px; background: var(--crypto-dark); border-radius: 16px; border-left: 4px solid var(--crypto-green); text-align: center;">
+                    <h4 style="color: var(--crypto-green); margin-bottom: 16px; font-size: 24px;">Garantia de Lucro</h4>
+                    <p style="color: var(--crypto-gray); margin: 0; font-size: 18px;">Comece a ver lucros em 24 horas ou receba suporte de otimização personalizado sem custo adicional.</p>
+                    <div style="margin-top: 24px;">
+                        <a href="mailto:contact@binariodelucro.com" class="btn btn-primary" style="padding: 16px 32px; font-size: 18px;">
+                            Contate-nos Agora
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="features" style="background: var(--crypto-dark);">
+        <div class="container">
+            <div class="section-header">
+                <h2><span class="gradient-text">Sobre o Binário de Lucro</span></h2>
+                <p>Somos uma equipe de especialistas em tecnologia financeira e inteligência artificial, dedicados a democratizar o acesso a estratégias de negociação profissionais.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 32px; margin-top: 48px;">
+                <div style="text-align: center; padding: 32px; background: var(--crypto-darker); border-radius: 16px;">
+                    <div style="font-size: 48px; font-weight: bold; color: var(--crypto-blue); margin-bottom: 16px;">5+</div>
+                    <div style="color: var(--crypto-gray);">Anos de Experiência</div>
+                </div>
+                <div style="text-align: center; padding: 32px; background: var(--crypto-darker); border-radius: 16px;">
+                    <div style="font-size: 48px; font-weight: bold; color: var(--crypto-green); margin-bottom: 16px;">50K+</div>
+                    <div style="color: var(--crypto-gray);">Clientes Satisfeitos</div>
+                </div>
+                <div style="text-align: center; padding: 32px; background: var(--crypto-darker); border-radius: 16px;">
+                    <div style="font-size: 48px; font-weight: bold; color: var(--crypto-gold); margin-bottom: 16px;">98%</div>
+                    <div style="color: var(--crypto-gray);">Taxa de Sucesso</div>
+                </div>
+                <div style="text-align: center; padding: 32px; background: var(--crypto-darker); border-radius: 16px;">
+                    <div style="font-size: 48px; font-weight: bold; color: var(--crypto-blue); margin-bottom: 16px;">$2B+</div>
+                    <div style="color: var(--crypto-gray);">Volume Negociado</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <a href="#" class="logo">
+                            <div class="logo-icon">BP</div>
+                            <span class="logo-text">Binário de Lucro</span>
+                        </a>
+                        <p>Revolucionando a negociação de criptomoedas através da inteligência artificial. Resultados comprovados, tecnologia de ponta.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">📱</a>
+                            <a href="#" class="social-link">💬</a>
+                            <a href="#" class="social-link">📧</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Plataforma</h3>
+                    <ul>
+                        <li><a href="#">Recursos</a></li>
+                        <li><a href="#">Preços</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Segurança</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Suporte</h3>
+                    <ul>
+                        <li><a href="#">Central de Ajuda</a></li>
+                        <li><a href="#">Documentação</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Contato</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p style="color: var(--crypto-gray);">© 2024 Binário de Lucro. Todos os direitos reservados.</p>
+                <div style="display: flex; gap: 24px;">
+                    <a href="#" style="color: var(--crypto-gray); text-decoration: none;">Privacidade</a>
+                    <a href="#" style="color: var(--crypto-gray); text-decoration: none;">Termos</a>
+                    <a href="#" style="color: var(--crypto-gray); text-decoration: none;">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Efeito de rolagem da navegação
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Rolagem suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Contadores animados
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    start = target;
+                    clearInterval(timer);
+                }
+                
+                if (element.id === 'successRate') {
+                    element.textContent = Math.floor(start) + '%';
+                } else if (element.id === 'activeUsers') {
+                    element.textContent = Math.floor(start).toLocaleString() + '+';
+                } else if (element.id === 'volume') {
+                    element.textContent = Math.floor(start) + 'M+';
+                }
+            }, 16);
+        }
+
+        // Intersection Observer para animação de estatísticas
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(document.getElementById('successRate'), 98);
+                    animateCounter(document.getElementById('activeUsers'), 50000);
+                    animateCounter(document.getElementById('volume'), 250);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        // Observar a seção de estatísticas
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Adicionar animação de fade-in aos elementos
+            const elements = document.querySelectorAll('.feature-card, .contact-info');
+            elements.forEach(el => {
+                el.classList.add('animate-fade-in');
+            });
+        });
+
+        // Otimização de desempenho
+        let ticking = false;
+        function updateOnScroll() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    // Adicionar animações baseadas em rolagem aqui, se necessário
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        window.addEventListener('scroll', updateOnScroll);
+    </script>
+</body>
+</html>
